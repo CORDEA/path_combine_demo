@@ -1,11 +1,53 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  PathOperation _pathOperation = PathOperation.difference;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      body: SizedBox.shrink(),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButton<PathOperation>(
+              value: _pathOperation,
+              items: PathOperation.values
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.toString()),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _pathOperation = value;
+                  });
+                }
+              },
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ColoredBox(color: Colors.black),
+                  CustomPaint(painter: _CustomPainter(_pathOperation)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
